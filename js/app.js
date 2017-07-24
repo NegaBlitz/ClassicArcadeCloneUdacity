@@ -28,8 +28,10 @@ var Player = function (startX, startY) {
 		this.sprite = 'images/char-boy.png';
 		this.x = startX;
 		this.y = startY;
+		this.offsetY = 10; //Offset for Y axis
 };
 
+//Runs every tick
 Player.prototype.update = function() {
 	//Check win condition
 	if(this.y <= 0) {
@@ -38,41 +40,42 @@ Player.prototype.update = function() {
 	}
 };
 
+//Renders
 Player.prototype.render = function() {
 		ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+//Checks collision with bugs
 Player.prototype.checkCollision = function() {
 	
 };
 
 //Movement for the player, the tiles are currently 101x80, so this will be the coords we use.
 var tileWidth = 101;
-var tileHeight = 80;
+var tileHeight = 82;
 
-//Board dimensions (starts from 0, so a 5x6 board is 4x5)
+//Board dimensions (starts from 0 on both, array style, so a 5x6 board is 4x5)
 var boardDimX = 4;
 var boardDimY = 5;
 
 Player.prototype.handleInput = function(key) {
 	if(key === 'left' && this.x >= tileWidth) {
 		this.x -= tileWidth;
-		console.log("Blah");
 	}
 	else if(key === 'right' && this.x < tileWidth * boardDimX) {
 		this.x += tileWidth;
 	}
-	else if(key === 'up' && this.y >= tileHeight) {
+	else if(key === 'up' && this.y >= tileHeight - this.offsetY) {
 		this.y -= tileHeight;
 	}
-	else if(key === 'down' && this.y < tileHeight * boardDimY) {
+	else if(key === 'down' && this.y < (tileHeight * boardDimY) - this.offsetY) {
 		this.y += tileHeight;
 	}
 };
 
 Player.prototype.reset = function() {
 	this.x = (tileWidth*2); 
-	this.y = (tileHeight*boardDimY);
+	this.y = (tileHeight*boardDimY) - this.offsetY; //10 is an offset to center the player a little better.
 }
 
 // Now instantiate your objects.

@@ -24,12 +24,18 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-var Player = function () {
+var Player = function (startX, startY) {
 		this.sprite = 'images/char-boy.png';
+		this.x = startX;
+		this.y = startY;
 };
 
 Player.prototype.update = function() {
-	
+	//Check win condition
+	if(this.y <= 0) {
+		console.log("Got 'em");
+		this.reset();
+	}
 };
 
 Player.prototype.render = function() {
@@ -40,15 +46,41 @@ Player.prototype.checkCollision = function() {
 	
 };
 
-Player.prototype.handleInput = function () {
-	
+//Movement for the player, the tiles are currently 101x80, so this will be the coords we use.
+var tileWidth = 101;
+var tileHeight = 80;
+
+//Board dimensions (starts from 0, so a 5x6 board is 4x5)
+var boardDimX = 4;
+var boardDimY = 5;
+
+Player.prototype.handleInput = function(key) {
+	if(key === 'left' && this.x >= tileWidth) {
+		this.x -= tileWidth;
+		console.log("Blah");
+	}
+	else if(key === 'right' && this.x < tileWidth * boardDimX) {
+		this.x += tileWidth;
+	}
+	else if(key === 'up' && this.y >= tileHeight) {
+		this.y -= tileHeight;
+	}
+	else if(key === 'down' && this.y < tileHeight * boardDimY) {
+		this.y += tileHeight;
+	}
 };
+
+Player.prototype.reset = function() {
+	this.x = (tileWidth*2); 
+	this.y = (tileHeight*boardDimY);
+}
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var allEnemies = [];
 var player = new Player();
+player.reset();
 
 
 // This listens for key presses and sends the keys to your

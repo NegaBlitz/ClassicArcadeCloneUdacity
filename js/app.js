@@ -1,4 +1,5 @@
 // The code for the arcade game clone
+'use strict';
 
 // Enemies our player must avoid
 var Enemy = function(startX, startY, speed) {
@@ -29,15 +30,19 @@ Enemy.prototype.update = function(dt) {
     if (this.x >= ((boardDimX + 2) * tileWidth)) {
         this.reset();
     }
+		
+		this.checkCollision();
+};
 
-    // If this enemy gets to the player, then the player gets reset
+Enemy.prototype.checkCollision = function() {
+	  // If this enemy gets to the player, then the player gets reset
     if (Math.abs(this.x - player.x) < hitbox) {
         if (Math.abs(this.y - player.y) < hitbox) {
             player.reset();
             console.log("Hit");
         }
     }
-};
+}
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -65,6 +70,8 @@ var Player = function() {
     this.y = 0;
     this.offsetY = 10; // Offset for Y axis
     this.hitbox = 60; // Hitbox for enemy collision, once an enemy is within this many px of you, you are colliding with them.
+		this.StartX = (tileWidth * 2); // 2 is the Center column.
+		this.StartY = (tileHeight * boardDimY) - this.offsetY; // Bottom row. 10 is an offset to center the player a little better.
 };
 
 // Runs every tick
@@ -79,11 +86,6 @@ Player.prototype.update = function() {
 // Renders
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-
-// Checks collision with bugs
-Player.prototype.bugCollide = function() {
-    this.reset();
 };
 
 // Movement for the player, the tiles are currently 101x80, so this will be the coords we use.
@@ -108,9 +110,11 @@ Player.prototype.handleInput = function(key) {
 };
 
 // Resets player to bottom of the screen.
+
+//Reset function
 Player.prototype.reset = function() {
-    this.x = (tileWidth * 2); // 2 is the Center column.
-    this.y = (tileHeight * boardDimY) - this.offsetY; // Bottom row. 10 is an offset to center the player a little better.
+    this.x = this.StartX; 
+    this.y = this.StartY; 
 };
 
 // Now instantiate your objects.
@@ -124,13 +128,22 @@ var enemyCount = 3;
 // Speed incrementor for each enemy (They each get faster as this number increases)
 var enemySpeedIncr = 150;
 
+//Define i for looping through the enemies
+var i = 1;
+
+//Randomizer for the initial enemy positions
+var randomizer;
+
+//Enemy variable for creating new bugs
+var enemy;
+
 // Loop to create 3 enemies, or more, specified above
-for (i = 1; i <= enemyCount; i++) {
+for (i; i <= enemyCount; i++) {
     // Randomizes which row they appear on.
-    var randomizer = getRandomInt(1, 4);
+    randomizer = getRandomInt(1, 4);
 
     // Creates an enemy at a specified row, and each enemy iteration is faster than the last.
-    var enemy = new Enemy((tileWidth * 2), (tileHeight * randomizer), i * enemySpeedIncr);
+    enemy = new Enemy((tileWidth * 2), (tileHeight * randomizer), i * enemySpeedIncr);
 
     // Pushes into allEnemies array.
     allEnemies.push(enemy);

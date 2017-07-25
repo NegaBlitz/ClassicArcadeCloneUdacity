@@ -4,7 +4,7 @@ This program can be run in the browser, and is a clone of the classic arcade gam
 
 ## How to run
 
-Simply right-click on index.html and run the web-page in your browser of choice. It will pull the game up and immediately start.
+Simply right-click on index.html and open it with the webpage in your browser of choice. It will pull the game up and immediately start.
 
 ## Other information
 
